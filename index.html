@@ -1,23 +1,109 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/Logo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="24-02 WSD Assignment 02 - A modern Vue.js web application for WSD project" />
+    <meta name="author" content="Your Name" />
+    <meta name="keywords" content="WSD, Assignment, Vue.js, Web Development" />
+
     <title>24-02 WSD Assignment 02</title>
 
-      <script>
-          (function(){
-              var redirect = sessionStorage.redirect;
-              delete sessionStorage.redirect;
-              if (redirect && redirect != location.href) {
-                  history.replaceState(null, null, redirect);
-              }
-          })();
-      </script>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/Logo.png" />
+
+    <!-- Open Graph / Social Media Integration -->
+    <meta property="og:title" content="24-02 WSD Assignment 02" />
+    <meta property="og:description" content="A modern Vue.js web application for WSD Assignment 02" />
+    <meta property="og:image" content="/Logo.png" />
+    <meta property="og:url" content="http://localhost:3000" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="24-02 WSD Assignment 02" />
+    <meta name="twitter:description" content="A modern Vue.js web application for WSD Assignment 02" />
+    <meta name="twitter:image" content="/Logo.png" />
+
+    <!-- SEO Canonical URL -->
+    <link rel="canonical" href="http://localhost:3000" />
+
+    <!-- Security Policies -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' https://developers.kakao.com https://kauth.kakao.com https://t1.kakaocdn.net;
+        connect-src 'self' https://kauth.kakao.com https://kapi.kakao.com;
+        img-src 'self' data: https:;
+        style-src 'self' 'unsafe-inline';
+        font-src 'self' data:;
+        frame-src 'self' https://developers.kakao.com;
+    " />
+
+    <!-- JavaScript Redirect Handling -->
+    <script>
+        (function () {
+            const redirect = sessionStorage.redirect;
+            delete sessionStorage.redirect;
+            if (redirect && redirect !== location.href) {
+                history.replaceState(null, null, redirect);
+            }
+        })();
+    </script>
+
+    <!-- Prevent Unauthorized Origins -->
+    <script>
+        (function () {
+            'use strict';
+            const trustedOrigins = ['http://localhost:3000'];
+            if (!trustedOrigins.includes(window.location.origin)) {
+                console.warn('Untrusted origin detected. Blocking scripts for security.');
+                document.write('<h1>Access Denied</h1>');
+            }
+        })();
+    </script>
+
+    <!-- Kakao SDK Initialization -->
+    <script
+            src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js"
+            integrity="sha384-l+xbElFSnPZ2rOaPrU//2FF5B4LB8FiX5q4fXYTlfcG4PGpMkE1vcL7kNXI6Cci0"
+            crossorigin="anonymous"
+    ></script>
+    <script>
+        if (window.Kakao) {
+            if (!window.Kakao.isInitialized()) {
+                window.Kakao.init(import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY);
+                console.log('✅ Kakao SDK Initialized:', window.Kakao.isInitialized());
+            }
+        } else {
+            console.error('❌ Kakao SDK failed to load.');
+        }
+    </script>
+</head>
+
+<body>
+<div id="app"></div>
+
+<!-- JavaScript Entry Point -->
+<script type="module" src="/src/main.ts"></script>
+
+<!-- JavaScript Disabled Warning -->
+<noscript>
+    <p>This application requires JavaScript to run. Please enable JavaScript in your browser and reload the page.</p>
+</noscript>
+
+<!-- Service Worker Registration (PWA Support) -->
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+                console.log('✅ Service Worker registered:', registration.scope);
+            })
+            .catch(error => {
+                console.error('❌ Service Worker registration failed:', error);
+            });
+    }
+</script>
+</body>
 </html>

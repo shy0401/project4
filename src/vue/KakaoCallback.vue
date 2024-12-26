@@ -1,5 +1,7 @@
 <template>
-  <div>카카오 로그인 처리 중...</div>
+  <div class="kakao-auth">
+    <p>🔄 Processing Kakao Login...</p>
+  </div>
 </template>
 
 <script>
@@ -16,7 +18,7 @@ export default {
         const code = urlParams.get('code');
 
         if (!code) {
-          throw new Error('Authorization code is missing');
+          throw new Error('❌ Authorization code is missing');
         }
 
         // ✅ 액세스 토큰 요청
@@ -36,7 +38,7 @@ export default {
         const {access_token} = response.data;
 
         if (!access_token) {
-          throw new Error('Failed to retrieve access token');
+          throw new Error('❌ Failed to retrieve access token');
         }
 
         // ✅ 사용자 정보 요청
@@ -87,5 +89,6 @@ export default {
   text-align: center;
   margin-top: 50px;
   font-size: 1.2rem;
+  font-weight: bold;
 }
 </style>

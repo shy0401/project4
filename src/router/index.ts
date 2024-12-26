@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import SignIn from '@/vue/SignIn.vue';
 import Home from '@/vue/home.vue';
+import KakaoCallback from '@/vue/KakaoCallback.vue';
 
 const routes = [
     {
@@ -8,12 +9,6 @@ const routes = [
         name: 'Main',
         component: Home,
         meta: { requiresAuth: true },
-        children: [
-            { name: 'HomeMain', component: () => import('@/views/home-main.vue'), path: '/' },
-            { name: 'HomePopular', component: () => import('@/views/home-popular.vue'), path: 'popular' },
-            { name: 'HomeWishList', component: () => import('@/views/home-wishlist.vue'), path: 'wishlist' },
-            { name: 'HomeSearch', component: () => import('@/views/home-search.vue'), path: 'search' }
-        ]
     },
     {
         path: '/signin',
@@ -22,31 +17,36 @@ const routes = [
     },
     {
         path: '/auth',
-        name: 'KakaoAuth',
-        component: () => import('@/vue/KakaoAuth.vue'), // 카카오 로그인 리다이렉트 처리
+        name: 'KakaoCallback',
+        component: KakaoCallback,
     },
 ];
 
 const router = createRouter({
-    history: createWebHashHistory('/24-02-WSD-Assignment-02-Demo/'),
-    routes
+    history: createWebHashHistory(),
+    routes,
 });
 
-router.beforeEach((to, _from, next): void => {
-    const isAuthenticated = localStorage.getItem('TMDb-Key') !== null;
+router.beforeEach((to, from, next) => {
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+
+    if (to.name === 'KakaoCallback') {
+        next();
+        return;
+    }
 
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (!isAuthenticated) {
+        if (!isLoggedIn) {
+            console.warn('🔒 Access denied. Redirecting to SignIn...');
             next({ name: 'SignIn' });
         } else {
             next();
         }
+    } else if (to.name === 'SignIn' && isLoggedIn) {
+        console.info('🔄 Already logged in. Redirecting to Main...');
+        next({ name: 'Main' });
     } else {
-        if (to.name === 'SignIn' && isAuthenticated) {
-            next({ name: '/' });
-        } else {
-            next();
-        }
+        next();
     }
 });
 

@@ -4,60 +4,93 @@
     <div class="container">
       <div id="phone">
         <div id="content-wrapper">
-          <!-- 로그인 카드 -->
+          <!-- 로그인 폼 -->
           <div :class="['card', { hidden: !isLoginVisible }]" id="login">
             <form @submit.prevent="handleLogin">
               <h1>Sign in</h1>
-              <div class="input" :class="{ 'active': isEmailFocused || email }">
-                <input id="email" type="email" v-model="email" @focus="focusInput('email')" @blur="blurInput('email')">
+              <div class="input" :class="{ active: isEmailFocused || email }">
+                <input
+                    id="email"
+                    type="email"
+                    v-model="email"
+                    @focus="focusInput('email')"
+                    @blur="blurInput('email')"
+                />
                 <label for="email">Username or Email</label>
               </div>
-              <div class="input" :class="{ 'active': isPasswordFocused || password }">
-                <input id="password" type="password" v-model="password" @focus="focusInput('password')" @blur="blurInput('password')">
+              <div class="input" :class="{ active: isPasswordFocused || password }">
+                <input
+                    id="password"
+                    type="password"
+                    v-model="password"
+                    @focus="focusInput('password')"
+                    @blur="blurInput('password')"
+                />
                 <label for="password">Password</label>
               </div>
               <span class="checkbox remember">
-                <input type="checkbox" id="remember" v-model="rememberMe">
+                <input type="checkbox" id="remember" v-model="rememberMe" />
                 <label for="remember" class="read-text">Remember me</label>
-              </span>
-              <span class="checkbox forgot">
-                <a href="#">Forgot Password?</a>
               </span>
               <button :disabled="!isLoginFormValid">Login</button>
             </form>
-
             <!-- 카카오 로그인 버튼 -->
-            <button class="kakao-login-btn" @click="kakaoLogin">
-              <img src="https://developers.kakao.com/assets/img/about/logos/kakaologin/logo_kakao.png" alt="Kakao Login">
+            <button class="kakao-login-btn" @click="handleKakaoLogin">
+              <img
+                  src="https://developers.kakao.com/assets/img/about/logos/kakaologin/logo_kakao.png"
+                  alt="Kakao Login"
+                  class="kakao-login-img"
+              />
               Login with Kakao
             </button>
-
-            <a href="javascript:void(0)" class="account-check" @click="toggleCard">Don't have an account? <b>Sign up</b></a>
+            <a href="javascript:void(0)" class="account-check" @click="toggleCard">
+              Don't have an account? <b>Sign up</b>
+            </a>
           </div>
 
-          <!-- 회원가입 카드 -->
+          <!-- 회원가입 폼 -->
           <div :class="['card', { hidden: isLoginVisible }]" id="register">
             <form @submit.prevent="handleRegister">
               <h1>Sign up</h1>
-              <div class="input" :class="{ 'active': isRegisterEmailFocused || registerEmail }">
-                <input id="register-email" type="email" v-model="registerEmail" @focus="focusInput('registerEmail')" @blur="blurInput('registerEmail')">
+              <div class="input" :class="{ active: isRegisterEmailFocused || registerEmail }">
+                <input
+                    id="register-email"
+                    type="email"
+                    v-model="registerEmail"
+                    @focus="focusInput('registerEmail')"
+                    @blur="blurInput('registerEmail')"
+                />
                 <label for="register-email">Email</label>
               </div>
-              <div class="input" :class="{ 'active': isRegisterPasswordFocused || registerPassword }">
-                <input id="register-password" type="password" v-model="registerPassword" @focus="focusInput('registerPassword')" @blur="blurInput('registerPassword')">
+              <div class="input" :class="{ active: isRegisterPasswordFocused || registerPassword }">
+                <input
+                    id="register-password"
+                    type="password"
+                    v-model="registerPassword"
+                    @focus="focusInput('registerPassword')"
+                    @blur="blurInput('registerPassword')"
+                />
                 <label for="register-password">Password</label>
               </div>
-              <div class="input" :class="{ 'active': isConfirmPasswordFocused || confirmPassword }">
-                <input id="confirm-password" type="password" v-model="confirmPassword" @focus="focusInput('confirmPassword')" @blur="blurInput('confirmPassword')">
+              <div class="input" :class="{ active: isConfirmPasswordFocused || confirmPassword }">
+                <input
+                    id="confirm-password"
+                    type="password"
+                    v-model="confirmPassword"
+                    @focus="focusInput('confirmPassword')"
+                    @blur="blurInput('confirmPassword')"
+                />
                 <label for="confirm-password">Confirm Password</label>
               </div>
               <span class="checkbox remember">
-                <input type="checkbox" id="terms" v-model="acceptTerms">
+                <input type="checkbox" id="terms" v-model="acceptTerms" />
                 <label for="terms" class="read-text">I have read <b>Terms and Conditions</b></label>
               </span>
               <button :disabled="!isRegisterFormValid">Register</button>
             </form>
-            <a href="javascript:void(0)" id="gotologin" class="account-check" @click="toggleCard">Already have an account? <b>Sign in</b></a>
+            <a href="javascript:void(0)" id="gotologin" class="account-check" @click="toggleCard">
+              Already have an account? <b>Sign in</b>
+            </a>
           </div>
         </div>
       </div>
@@ -65,12 +98,10 @@
   </div>
 </template>
 
-
 <script>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import {tryLogin, tryRegister} from "@/script/auth/Authentication.js";
-import { useRouter } from 'vue-router'
-
+import { ref, computed } from 'vue';
+import { tryLogin, tryRegister } from '@/script/auth/Authentication.js';
+import { useRouter } from 'vue-router';
 
 export default {
   setup() {
@@ -103,31 +134,31 @@ export default {
     };
 
     const focusInput = (inputName) => {
-      if (inputName === 'email') isEmailFocused.value = true;
-      if (inputName === 'password') isPasswordFocused.value = true;
+      switch (inputName) {
+        case 'email': isEmailFocused.value = true; break;
+        case 'password': isPasswordFocused.value = true; break;
+      }
     };
 
     const blurInput = (inputName) => {
-      if (inputName === 'email') isEmailFocused.value = false;
-      if (inputName === 'password') isPasswordFocused.value = false;
+      switch (inputName) {
+        case 'email': isEmailFocused.value = false; break;
+        case 'password': isPasswordFocused.value = false; break;
+      }
     };
 
     const handleLogin = () => {
-      console.log('Logging in with:', email.value, password.value);
-      router.push('/');
+      tryLogin(email.value, password.value, () => router.push('/'), () => alert('Login failed'));
     };
 
     const handleRegister = () => {
-      console.log('Registering with:', registerEmail.value, registerPassword.value);
-      toggleCard();
+      tryRegister(registerEmail.value, registerPassword.value, toggleCard, (err) => alert(err));
     };
 
-    const kakaoLogin = () => {
+    const handleKakaoLogin = () => {
       const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${
           import.meta.env.VITE_KAKAO_REST_API_KEY
-      }&redirect_uri=${
-          import.meta.env.VITE_KAKAO_REDIRECT_URI
-      }&response_type=code`;
+      }&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}&response_type=code`;
 
       window.location.href = KAKAO_AUTH_URL;
     };
@@ -153,9 +184,9 @@ export default {
       blurInput,
       handleLogin,
       handleRegister,
-      kakaoLogin,
+      handleKakaoLogin,
     };
-  }
+  },
 };
 </script>
 
@@ -172,27 +203,6 @@ export default {
 </style>
 
 <style scoped>
-.kakao-login-btn {
-  margin-top: 20px;
-  width: 100%;
-  padding: 12px;
-  background-color: #fee500;
-  color: #000;
-  font-weight: bold;
-  font-size: 16px;
-  text-align: center;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.kakao-login-btn img {
-  height: 20px;
-}
 
 .bg-image {
   position: fixed;
@@ -204,7 +214,26 @@ export default {
   background-size: cover;
   background-position: center;
 }
+.kakao-login-btn {
+  margin-top: 1rem;
+  background-color: #fee500;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+.kakao-login-img {
+  width: 10px;
+  height: 0px;
+  margin-right: 8px;
+}
 .bg-image::before {
   content: '';
   position: absolute;
